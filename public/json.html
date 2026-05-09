@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng Quốc Gia Test</title>
+    <style>
+        /* CSS để tạo giao diện tối (Dark Mode) */
+        body {
+            background: #020617;
+            color: white;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+        }
+        .card {
+            background: #0f172a;
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid #1e293b;
+            text-align: center;
+            width: 320px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        h1 { font-size: 1rem; margin-bottom: 25px; color: #94a3b8; }
+        #name { color: #fbbf24; }
+        .box {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+        }
+        small { font-size: 0.65rem; color: #64748b; font-weight: bold; }
+        #virtual-time { font-size: 1.6rem; font-weight: bold; color: #38bdf8; margin-top: 5px; }
+        #counter { font-size: 2.8rem; font-weight: bold; color: #22c55e; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>QUỐC GIA: <span id="name">TEST</span></h1>
+        
+        <div class="box">
+            <small>THỜI GIAN ẢO (1 ngày thật = 2 tháng)</small>
+            <div id="virtual-time">03/11/1965</div>
+        </div>
+
+        <div class="box">
+            <small>DÂN SỐ DỰ KIẾN</small>
+            <div id="counter">100,000</div>
+        </div>
+    </div>
+
+    <script>
+        // Logic xử lý thời gian và dân số
+        const startDate = new Date('1965-11-03T00:00:00');
+        const realStartTime = Date.now();
+        const SPEED = 60; // Tỉ lệ 1 ngày thật = 60 ngày ảo (2 tháng)
+
+        function update() {
+            const now = Date.now();
+            const elapsedRealSeconds = (now - realStartTime) / 1000;
+            
+            // Tính toán ngày ảo trôi qua
+            const virtualSecondsPassed = elapsedRealSeconds * SPEED * 86400;
+            const currentVirtualDate = new Date(startDate.getTime() + virtualSecondsPassed);
+
+            // Hiển thị ngày/tháng/năm
+            const d = String(currentVirtualDate.getDate()).padStart(2, '0');
+            const m = String(currentVirtualDate.getMonth() + 1).padStart(2, '0');
+            const y = currentVirtualDate.getFullYear();
+            document.getElementById('virtual-time').innerText = `${d}/${m}/${y}`;
+            
+            // Giả lập dân số tăng (mỗi giây tăng khoảng 0.5 người)
+            const population = 100000 + (elapsedRealSeconds * 0.5); 
+            document.getElementById('counter').innerText = Math.floor(population).toLocaleString();
+        }
+
+        // Cập nhật liên tục mỗi 0.1 giây
+        setInterval(update, 100);
+    </script>
+</body>
+</html>
